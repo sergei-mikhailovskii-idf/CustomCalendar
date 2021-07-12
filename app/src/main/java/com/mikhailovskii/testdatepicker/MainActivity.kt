@@ -2,7 +2,6 @@ package com.mikhailovskii.testdatepicker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
@@ -31,12 +30,14 @@ class MainActivity : AppCompatActivity() {
 
         val days = mutableListOf<DayItem>()
         val today = Calendar.getInstance()
-        days.add(DayItem(Calendar.getInstance()))
+        days.add(DayItem(Calendar.getInstance(), false))
         for (i in 0..29) {
             today.add(Calendar.DAY_OF_YEAR, 1)
+
+            // i % 4 != 0 - stub for disabled
             days.add(DayItem(Calendar.getInstance().apply {
                 time = today.time
-            }))
+            }, i % 4 != 0))
         }
         calendarAdapter.setItems(days)
 

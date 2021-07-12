@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
@@ -16,11 +18,13 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         private lateinit var tvDate: AppCompatTextView
         private lateinit var tvMonth: AppCompatTextView
         private lateinit var tvDayDescription: AppCompatTextView
+        private lateinit var clRoot: ConstraintLayout
 
         fun bindData(data: DayItem) {
             tvDate = itemView.findViewById(R.id.tv_day_number)
             tvMonth = itemView.findViewById(R.id.tv_month)
             tvDayDescription = itemView.findViewById(R.id.tv_day_description)
+            clRoot = itemView.findViewById(R.id.cl_root)
 
             tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
             if (data.isNewMonth()) {
@@ -34,6 +38,11 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
             } else {
                 ""
             }
+
+            clRoot.background = ContextCompat.getDrawable(
+                itemView.context,
+                if (data.isDateEnabled == true) R.drawable.item_default_background else R.drawable.item_disabled_background
+            )
         }
 
         private fun showNewMonthData(data: DayItem) {
