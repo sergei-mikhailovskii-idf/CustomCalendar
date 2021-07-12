@@ -41,7 +41,11 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
 
             clRoot.background = ContextCompat.getDrawable(
                 itemView.context,
-                if (data.isDateEnabled == true) R.drawable.item_default_background else R.drawable.item_disabled_background
+                when {
+                    data.isDateEnabled == true -> R.drawable.item_default_background
+                    data.isToday() -> R.drawable.item_today_background
+                    else -> R.drawable.item_disabled_background
+                }
             )
         }
 

@@ -15,18 +15,6 @@ class MainActivity : AppCompatActivity() {
 
         val rvDays = findViewById<RecyclerView>(R.id.rv_days)
         rvDays.adapter = calendarAdapter
-//        rvDays.addItemDecoration(
-//            GridItemsDecoration(
-//                this,
-//                resources.getDimensionPixelSize(R.dimen.column_spacing),
-//                resources.getInteger(R.integer.column_number)
-//            )
-//        )
-
-//        rvDays.apply {
-//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
-//        }
 
         val days = mutableListOf<DayItem>()
         val today = Calendar.getInstance()
