@@ -12,15 +12,19 @@ import java.util.*
 class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     private val items = mutableListOf<DayItem>()
+    private var selectedItem = -1
 
-    inner class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class CalendarViewHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
 
         private lateinit var tvDate: AppCompatTextView
         private lateinit var tvMonth: AppCompatTextView
         private lateinit var tvDayDescription: AppCompatTextView
         private lateinit var clRoot: ConstraintLayout
 
-        fun bindData(data: DayItem) {
+        internal lateinit var onClickListener: () -> Unit
+
+        fun bindData(data: DayItem, isSelected: Boolean) {
             tvDate = itemView.findViewById(R.id.tv_day_number)
             tvMonth = itemView.findViewById(R.id.tv_month)
             tvDayDescription = itemView.findViewById(R.id.tv_day_description)
@@ -39,9 +43,14 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
                 ""
             }
 
+            clRoot.setOnClickListener {
+                onClickListener.invoke()
+            }
+
             clRoot.background = ContextCompat.getDrawable(
                 itemView.context,
                 when {
+                    isSelected -> R.drawable.item_selected_background
                     data.isDateEnabled == true -> R.drawable.item_default_background
                     data.isToday() -> R.drawable.item_today_background
                     else -> R.drawable.item_disabled_background
@@ -57,7 +66,6 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
             }
             tvMonth.text = monthName
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CalendarViewHolder(
@@ -65,7 +73,14 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
     )
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.bindData(items[position])
+        val item = items[position]
+        holder.bindData(item, position == selectedItem)
+        holder.onClickListener = {
+            if (item.isDateEnabled == true && !item.isToday()) {
+                selectedItem = holder.adapterPosition
+                notifyDataSetChanged()
+            }
+        }
     }
 
     override fun getItemCount() = items.size
