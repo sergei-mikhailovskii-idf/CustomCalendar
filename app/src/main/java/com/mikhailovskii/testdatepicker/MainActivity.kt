@@ -1,9 +1,10 @@
 package com.mikhailovskii.testdatepicker
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.DatePicker
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,10 +16,27 @@ class MainActivity : AppCompatActivity() {
 
         val rvDays = findViewById<RecyclerView>(R.id.rv_days)
         rvDays.adapter = calendarAdapter
+//        rvDays.addItemDecoration(
+//            GridItemsDecoration(
+//                this,
+//                resources.getDimensionPixelSize(R.dimen.column_spacing),
+//                resources.getInteger(R.integer.column_number)
+//            )
+//        )
+
+//        rvDays.apply {
+//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
+//        }
 
         val days = mutableListOf<DayItem>()
-        for (i in 0..30) {
-            days.add(DayItem())
+        val today = Calendar.getInstance()
+        days.add(DayItem(Calendar.getInstance()))
+        for (i in 0..29) {
+            today.add(Calendar.DAY_OF_YEAR, 1)
+            days.add(DayItem(Calendar.getInstance().apply {
+                time = today.time
+            }))
         }
         calendarAdapter.setItems(days)
 
