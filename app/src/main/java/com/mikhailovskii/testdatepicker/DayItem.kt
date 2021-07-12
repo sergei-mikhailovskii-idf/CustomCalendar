@@ -2,7 +2,7 @@ package com.mikhailovskii.testdatepicker
 
 import java.util.*
 
-data class DayItem(
+open class DayItem(
     val date: Calendar? = null,
     val isDateEnabled: Boolean? = null
 ) {
@@ -16,3 +16,5 @@ data class DayItem(
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
+
+object EmptyDayItem : DayItem()

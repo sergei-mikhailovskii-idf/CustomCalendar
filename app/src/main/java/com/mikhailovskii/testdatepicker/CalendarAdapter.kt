@@ -86,8 +86,14 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
     override fun getItemCount() = items.size
 
     fun setItems(items: MutableList<DayItem>) {
-        this.items.clear()
-        this.items.addAll(items)
+        if (!items.isNullOrEmpty()) {
+            val firstDayNumber = items[0].date?.get(Calendar.DAY_OF_WEEK) ?: 0
+            for (i in 1 until firstDayNumber) {
+                items.add(0, EmptyDayItem)
+            }
+            this.items.clear()
+            this.items.addAll(items)
+        }
     }
 
 }
