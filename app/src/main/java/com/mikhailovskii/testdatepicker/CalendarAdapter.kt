@@ -62,6 +62,13 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
                     else -> R.drawable.item_default_background
                 }
             )
+            tvDate.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
+                    else R.color.black
+                )
+            )
         }
     }
 
@@ -80,6 +87,9 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
                 else -> "March"
             }
             tvMonth.text = monthName
+            tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
+            tvDayDescription.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
+            tvMonth.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
         }
     }
 
@@ -100,6 +110,13 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
             clRoot.setOnClickListener {
                 onClickListener.invoke()
             }
+            tvDate.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
+                    else R.color.black
+                )
+            )
             clRoot.background = ContextCompat.getDrawable(
                 itemView.context,
                 when (selectedDayOfYear) {
@@ -119,6 +136,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
                 itemView.context,
                 R.drawable.item_disabled_background
             )
+            tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.silver))
         }
     }
 
@@ -167,10 +185,8 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
 
         if (holder is OnClickStrategy) {
             holder.onClickListener = {
-                if (item.isDateEnabled && !item.isToday()) {
-                    selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
-                    notifyDataSetChanged()
-                }
+                selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
+                notifyDataSetChanged()
             }
         }
     }
