@@ -12,10 +12,20 @@ import java.util.*
 class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     private val items = mutableListOf<DayItem>()
-    private var selectedItem = -1
+    private var selectedDayOfYear: Int = -1
 
-    inner class CalendarViewHolder(view: View) :
-        RecyclerView.ViewHolder(view) {
+    abstract inner class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun bindData(data: DayItem)
+    }
+
+    inner class CalendarEmptyViewHolder(view: View) : CalendarViewHolder(view) {
+        override fun bindData(data: DayItem) {
+
+        }
+    }
+
+    inner class CalendarWithDateViewHolder(view: View) :
+        CalendarViewHolder(view) {
 
         private lateinit var tvDate: AppCompatTextView
         private lateinit var tvMonth: AppCompatTextView
@@ -24,7 +34,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
 
         internal lateinit var onClickListener: () -> Unit
 
-        fun bindData(data: DayItem, isSelected: Boolean) {
+        override fun bindData(data: DayItem) {
             tvDate = itemView.findViewById(R.id.tv_day_number)
             tvMonth = itemView.findViewById(R.id.tv_month)
             tvDayDescription = itemView.findViewById(R.id.tv_day_description)
@@ -50,7 +60,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
             clRoot.background = ContextCompat.getDrawable(
                 itemView.context,
                 when {
-                    isSelected -> R.drawable.item_selected_background
+                    data.date?.get(Calendar.DAY_OF_YEAR) == selectedDayOfYear -> R.drawable.item_selected_background
                     data.isDateEnabled == true -> R.drawable.item_default_background
                     data.isToday() -> R.drawable.item_today_background
                     else -> R.drawable.item_disabled_background
@@ -68,19 +78,49 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CalendarViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+        CALENDAR_EMPTY_ITEM_TYPE -> onCreateCalendarEmptyViewHolder(parent)
+        else -> onCreateCalendarWithDateViewHolder(parent)
+    }
+
+    override fun getItemViewType(position: Int) =
+        if (items[position] is EmptyDayItem) CALENDAR_EMPTY_ITEM_TYPE else CALENDAR_WITH_DATE_ITEM_TYPE
+
+    private fun onCreateCalendarWithDateViewHolder(parent: ViewGroup) = CalendarWithDateViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
+    )
+
+    private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup) = CalendarEmptyViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
     )
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val item = items[position]
-        holder.bindData(item, position == selectedItem)
+        holder.bindData(item)
+
+        if (holder is CalendarWithDateViewHolder) {
+            onBindCalendarWithDateViewHolder(holder, position, item)
+        }
+    }
+
+    private fun onBindCalendarWithDateViewHolder(
+        holder: CalendarWithDateViewHolder,
+        position: Int,
+        item: DayItem
+    ) {
         holder.onClickListener = {
             if (item.isDateEnabled == true && !item.isToday()) {
-                selectedItem = holder.adapterPosition
+                selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                 notifyDataSetChanged()
             }
         }
+    }
+
+    private fun onBindCalendarEmptyViewHolder(
+        holder: CalendarEmptyViewHolder,
+        position: Int
+    ) {
+
     }
 
     override fun getItemCount() = items.size
@@ -94,6 +134,11 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
             this.items.clear()
             this.items.addAll(items)
         }
+    }
+
+    companion object {
+        private const val CALENDAR_EMPTY_ITEM_TYPE = 0
+        private const val CALENDAR_WITH_DATE_ITEM_TYPE = 1
     }
 
 }
