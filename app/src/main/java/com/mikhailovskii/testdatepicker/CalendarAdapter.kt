@@ -16,10 +16,25 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
     private var selectedDayOfYear = -1
     private var previousClickedPosition = -1
 
+    interface OnClickStrategy {
+        var onClickListener: () -> Unit
+    }
+
     abstract inner class CalendarViewHolder<T : CalendarItem>(view: View) :
         RecyclerView.ViewHolder(view) {
 
         open fun bindData(data: T) {}
+    }
+
+    inner class CalendarHeaderViewHolder(view: View) : CalendarViewHolder<HeaderDayNameItem>(view) {
+
+        private lateinit var tvTitle: AppCompatTextView
+
+        override fun bindData(data: HeaderDayNameItem) {
+            tvTitle = itemView.findViewById(R.id.tv_title)
+            tvTitle.text = data.name
+        }
+
     }
 
     abstract inner class CalendarDateViewHolder(view: View) : CalendarViewHolder<DayItem>(view) {
@@ -36,10 +51,6 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
             tvDayDescription = itemView.findViewById(R.id.tv_day_description)
             clRoot = itemView.findViewById(R.id.cl_root)
         }
-    }
-
-    interface OnClickStrategy {
-        var onClickListener: () -> Unit
     }
 
     inner class CalendarEmptyViewHolder(view: View) : CalendarViewHolder<EmptyDayItem>(view)
@@ -151,6 +162,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
         CALENDAR_TODAY_DATE_ITEM_TYPE -> onCreateCalendarTodayDateViewHolder(parent)
         CALENDAR_NEW_MONTH_DATE_ITEM_TYPE -> onCreateCalendarNewMonthDateViewHolder(parent)
         CALENDAR_WITH_DATE_ITEM_TYPE -> onCreateCalendarWithDateViewHolder(parent)
+        CALENDAR_HEADER_ITEM_TYPE -> onCreateCalendarHeaderViewHolder(parent)
         else -> onCreateCalendarDisabledDateViewHolder(parent)
     }
 
@@ -162,6 +174,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
             item.isDateEnabled -> CALENDAR_WITH_DATE_ITEM_TYPE
             else -> CALENDAR_DISABLED_DATE_ITEM_TYPE
         }
+        is HeaderDayNameItem -> CALENDAR_HEADER_ITEM_TYPE
         else -> UNKNOWN_ITEM_TYPE
     }
 
@@ -169,10 +182,9 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
     ) as CalendarViewHolder<CalendarItem>
 
-    private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup): CalendarViewHolder<CalendarItem> =
-        CalendarEmptyViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+    private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup) = CalendarEmptyViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
+    ) as CalendarViewHolder<CalendarItem>
 
     private fun onCreateCalendarTodayDateViewHolder(parent: ViewGroup) =
         CalendarTodayDateViewHolder(
@@ -187,6 +199,11 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
     private fun onCreateCalendarDisabledDateViewHolder(parent: ViewGroup) =
         CalendarDisabledDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
+        ) as CalendarViewHolder<CalendarItem>
+
+    private fun onCreateCalendarHeaderViewHolder(parent: ViewGroup) =
+        CalendarHeaderViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_header, parent, false)
         ) as CalendarViewHolder<CalendarItem>
 
     override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
@@ -215,6 +232,9 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
             val firstDayNumber = items[0].date?.get(Calendar.DAY_OF_WEEK) ?: 0
             for (i in 1 until firstDayNumber) {
                 localItems.add(0, EmptyDayItem)
+            }
+            for (i in 0 until 7) {
+                localItems.add(0, HeaderDayNameItem("DO"))
             }
             this.items.clear()
             this.items.addAll(localItems)

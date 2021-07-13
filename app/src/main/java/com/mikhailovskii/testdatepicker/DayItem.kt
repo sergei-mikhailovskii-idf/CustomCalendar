@@ -20,3 +20,7 @@ class DayItem(
 }
 
 object EmptyDayItem : CalendarItem()
+
+data class HeaderDayNameItem(
+    val name: String
+) : CalendarItem()
