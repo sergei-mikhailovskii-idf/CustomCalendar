@@ -3,109 +3,15 @@ package com.mikhailovskii.testdatepicker
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<CalendarItem>>() {
+class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>() {
 
     private val items = mutableListOf<CalendarItem>()
     private var selectedDayOfYear = -1
     private var previousClickedPosition = -1
-
-    interface OnClickStrategy {
-        var onClickListener: () -> Unit
-    }
-
-    abstract inner class CalendarViewHolder<T : CalendarItem>(view: View) :
-        RecyclerView.ViewHolder(view) {
-
-        open fun bindData(data: T) {}
-    }
-
-    inner class CalendarHeaderViewHolder(view: View) : CalendarViewHolder<HeaderDayNameItem>(view) {
-
-        private lateinit var tvTitle: AppCompatTextView
-
-        override fun bindData(data: HeaderDayNameItem) {
-            tvTitle = itemView.findViewById(R.id.tv_title)
-            tvTitle.text = data.name
-        }
-
-    }
-
-    abstract inner class CalendarDateViewHolder(view: View) : CalendarViewHolder<DayItem>(view) {
-
-        protected lateinit var tvDate: AppCompatTextView
-        protected lateinit var tvMonth: AppCompatTextView
-        protected lateinit var tvDayDescription: AppCompatTextView
-        protected lateinit var clRoot: ConstraintLayout
-
-        @CallSuper
-        override fun bindData(data: DayItem) {
-            tvDate = itemView.findViewById(R.id.tv_day_number)
-            tvMonth = itemView.findViewById(R.id.tv_month)
-            tvDayDescription = itemView.findViewById(R.id.tv_day_description)
-            clRoot = itemView.findViewById(R.id.cl_root)
-        }
-    }
-
-    inner class CalendarEmptyViewHolder(view: View) : CalendarViewHolder<EmptyDayItem>(view)
-
-    inner class CalendarWithDateViewHolder(view: View) :
-        CalendarDateViewHolder(view), OnClickStrategy {
-
-        override lateinit var onClickListener: () -> Unit
-
-        override fun bindData(data: DayItem) {
-            super.bindData(data)
-
-            tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
-
-            clRoot.setOnClickListener {
-                onClickListener.invoke()
-            }
-
-            clRoot.background = ContextCompat.getDrawable(
-                itemView.context,
-                when (selectedDayOfYear) {
-                    data.date?.get(Calendar.DAY_OF_YEAR) -> R.drawable.item_selected_background
-                    else -> R.drawable.item_default_background
-                }
-            )
-            tvDate.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
-                    else R.color.black
-                )
-            )
-        }
-    }
-
-    inner class CalendarTodayDateViewHolder(view: View) : CalendarDateViewHolder(view) {
-        override fun bindData(data: DayItem) {
-            super.bindData(data)
-            tvDayDescription.text = "hoy"
-            tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
-            clRoot.background = ContextCompat.getDrawable(
-                itemView.context,
-                R.drawable.item_today_background
-            )
-            val monthName = when (data.date?.get(Calendar.MONTH)) {
-                0 -> "January"
-                1 -> "February"
-                else -> "March"
-            }
-            tvMonth.text = monthName
-            tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-            tvDayDescription.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-            tvMonth.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-        }
-    }
 
     inner class CalendarNewMonthDateViewHolder(view: View) : CalendarDateViewHolder(view),
         OnClickStrategy {
@@ -138,19 +44,6 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
                     else -> R.drawable.item_default_background
                 }
             )
-        }
-    }
-
-    inner class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view) {
-
-        override fun bindData(data: DayItem) {
-            super.bindData(data)
-            tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
-            clRoot.background = ContextCompat.getDrawable(
-                itemView.context,
-                R.drawable.item_disabled_background
-            )
-            tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.silver))
         }
     }
 
@@ -203,7 +96,8 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<
 
     private fun onCreateCalendarHeaderViewHolder(parent: ViewGroup) =
         CalendarHeaderViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_header, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_calendar_header, parent, false)
         ) as CalendarViewHolder<CalendarItem>
 
     override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
