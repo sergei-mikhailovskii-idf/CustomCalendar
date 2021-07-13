@@ -10,17 +10,19 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder<CalendarItem>>() {
 
-    private val items = mutableListOf<DayItem>()
-    private var selectedDayOfYear: Int = -1
-    private var previousClickedPosition: Int = -1
+    private val items = mutableListOf<CalendarItem>()
+    private var selectedDayOfYear = -1
+    private var previousClickedPosition = -1
 
-    abstract inner class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        open fun bindData(data: DayItem) {}
+    abstract inner class CalendarViewHolder<T : CalendarItem>(view: View) :
+        RecyclerView.ViewHolder(view) {
+
+        open fun bindData(data: T) {}
     }
 
-    abstract inner class CalendarDateViewHolder(view: View) : CalendarViewHolder(view) {
+    abstract inner class CalendarDateViewHolder(view: View) : CalendarViewHolder<DayItem>(view) {
 
         protected lateinit var tvDate: AppCompatTextView
         protected lateinit var tvMonth: AppCompatTextView
@@ -40,7 +42,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         var onClickListener: () -> Unit
     }
 
-    inner class CalendarEmptyViewHolder(view: View) : CalendarViewHolder(view)
+    inner class CalendarEmptyViewHolder(view: View) : CalendarViewHolder<EmptyDayItem>(view)
 
     inner class CalendarWithDateViewHolder(view: View) :
         CalendarDateViewHolder(view), OnClickStrategy {
@@ -141,7 +143,10 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CalendarViewHolder<CalendarItem> = when (viewType) {
         CALENDAR_EMPTY_ITEM_TYPE -> onCreateCalendarEmptyViewHolder(parent)
         CALENDAR_TODAY_DATE_ITEM_TYPE -> onCreateCalendarTodayDateViewHolder(parent)
         CALENDAR_NEW_MONTH_DATE_ITEM_TYPE -> onCreateCalendarNewMonthDateViewHolder(parent)
@@ -149,49 +154,55 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         else -> onCreateCalendarDisabledDateViewHolder(parent)
     }
 
-    override fun getItemViewType(position: Int) = when {
-        items[position] is EmptyDayItem -> CALENDAR_EMPTY_ITEM_TYPE
-        items[position].isToday() -> CALENDAR_TODAY_DATE_ITEM_TYPE
-        items[position].isNewMonth() -> CALENDAR_NEW_MONTH_DATE_ITEM_TYPE
-        items[position].isDateEnabled -> CALENDAR_WITH_DATE_ITEM_TYPE
-        else -> CALENDAR_DISABLED_DATE_ITEM_TYPE
+    override fun getItemViewType(position: Int) = when (val item = items[position]) {
+        EmptyDayItem -> CALENDAR_EMPTY_ITEM_TYPE
+        is DayItem -> when {
+            item.isToday() -> CALENDAR_TODAY_DATE_ITEM_TYPE
+            item.isNewMonth() -> CALENDAR_NEW_MONTH_DATE_ITEM_TYPE
+            item.isDateEnabled -> CALENDAR_WITH_DATE_ITEM_TYPE
+            else -> CALENDAR_DISABLED_DATE_ITEM_TYPE
+        }
+        else -> UNKNOWN_ITEM_TYPE
     }
 
     private fun onCreateCalendarWithDateViewHolder(parent: ViewGroup) = CalendarWithDateViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-    )
+    ) as CalendarViewHolder<CalendarItem>
 
-    private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup) = CalendarEmptyViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
-    )
+    private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup): CalendarViewHolder<CalendarItem> =
+        CalendarEmptyViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
+        ) as CalendarViewHolder<CalendarItem>
 
     private fun onCreateCalendarTodayDateViewHolder(parent: ViewGroup) =
         CalendarTodayDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        )
+        ) as CalendarViewHolder<CalendarItem>
 
     private fun onCreateCalendarNewMonthDateViewHolder(parent: ViewGroup) =
         CalendarNewMonthDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        )
+        ) as CalendarViewHolder<CalendarItem>
 
     private fun onCreateCalendarDisabledDateViewHolder(parent: ViewGroup) =
         CalendarDisabledDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        )
+        ) as CalendarViewHolder<CalendarItem>
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
         val item = items[position]
         holder.bindData(item)
 
-        if (holder is OnClickStrategy) {
-            holder.onClickListener = {
-                selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
-                notifyItemChanged(position)
-                if (previousClickedPosition != -1) {
-                    notifyItemChanged(previousClickedPosition)
+        if (item is DayItem) {
+            if (holder is OnClickStrategy) {
+                holder.onClickListener = {
+                    selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
+                    notifyItemChanged(position)
+                    if (previousClickedPosition != -1) {
+                        notifyItemChanged(previousClickedPosition)
+                    }
+                    previousClickedPosition = holder.adapterPosition
                 }
-                previousClickedPosition = holder.adapterPosition
             }
         }
     }
@@ -199,13 +210,14 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
     override fun getItemCount() = items.size
 
     fun setItems(items: MutableList<DayItem>) {
+        val localItems: MutableList<CalendarItem> = items.toMutableList()
         if (!items.isNullOrEmpty()) {
             val firstDayNumber = items[0].date?.get(Calendar.DAY_OF_WEEK) ?: 0
             for (i in 1 until firstDayNumber) {
-                items.add(0, EmptyDayItem)
+                localItems.add(0, EmptyDayItem)
             }
             this.items.clear()
-            this.items.addAll(items)
+            this.items.addAll(localItems)
         }
     }
 
@@ -216,6 +228,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         private const val CALENDAR_WITH_DATE_ITEM_TYPE = 3
         private const val CALENDAR_DISABLED_DATE_ITEM_TYPE = 4
         private const val CALENDAR_HEADER_ITEM_TYPE = 5
+        private const val UNKNOWN_ITEM_TYPE = -1
     }
 
 }

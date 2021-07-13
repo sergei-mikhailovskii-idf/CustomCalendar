@@ -2,10 +2,12 @@ package com.mikhailovskii.testdatepicker
 
 import java.util.*
 
-open class DayItem(
+sealed class CalendarItem
+
+class DayItem(
     val date: Calendar? = null,
     val isDateEnabled: Boolean = true
-) {
+): CalendarItem() {
 
     fun isToday() = if (date != null) isSameDay(date, Calendar.getInstance()) else false
 
@@ -17,4 +19,4 @@ open class DayItem(
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
 
-object EmptyDayItem : DayItem()
+object EmptyDayItem : CalendarItem()
