@@ -4,7 +4,7 @@ import java.util.*
 
 open class DayItem(
     val date: Calendar? = null,
-    val isDateEnabled: Boolean? = null
+    val isDateEnabled: Boolean = true
 ) {
 
     fun isToday() = if (date != null) isSameDay(date, Calendar.getInstance()) else false
