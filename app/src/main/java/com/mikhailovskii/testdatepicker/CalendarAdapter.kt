@@ -50,7 +50,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
         }
 
         if (item is DayItem) {
-            if (holder is EnabledItemStrategy) {
+            if (holder is ItemStrategy.EnabledItemStrategy) {
                 holder.onClickListener = {
                     selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                     notifyItemChanged(position)
@@ -59,7 +59,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
                     }
                     previousClickedPosition = holder.adapterPosition
                 }
-            } else if (holder is DisabledItemStrategy) {
+            } else if (holder is ItemStrategy.DisabledItemStrategy) {
                 holder.onClickListener = {
                     selectedDisabledDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                     notifyItemChanged(position)

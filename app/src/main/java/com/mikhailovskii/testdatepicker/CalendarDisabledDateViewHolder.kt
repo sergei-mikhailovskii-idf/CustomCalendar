@@ -7,7 +7,7 @@ import it.sephiroth.android.library.xtooltip.Tooltip
 import java.util.*
 
 class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view),
-    DisabledItemStrategy {
+    ItemStrategy.DisabledItemStrategy {
 
     override fun bindData(data: DayItem, selectedDayOfYear: Int) {
         super.bindData(data, selectedDayOfYear)

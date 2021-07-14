@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import java.util.*
 
 class CalendarNewMonthDateViewHolder(view: View) : CalendarDateViewHolder(view),
-    DisabledItemStrategy {
+    ItemStrategy.DisabledItemStrategy {
 
     override lateinit var onClickListener: () -> Unit
 
