@@ -17,7 +17,7 @@ class OnCreateViewHolderFacade {
         else -> onCreateCalendarDisabledDateViewHolder(parent)
     }
 
-    private fun onCreateCalendarWithDateViewHolder(parent: ViewGroup) = CalendarAdapter.CalendarWithDateViewHolder(
+    private fun onCreateCalendarWithDateViewHolder(parent: ViewGroup) = CalendarWithDateViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
     ) as CalendarViewHolder<CalendarItem>
 
@@ -31,7 +31,7 @@ class OnCreateViewHolderFacade {
         ) as CalendarViewHolder<CalendarItem>
 
     private fun onCreateCalendarNewMonthDateViewHolder(parent: ViewGroup) =
-        CalendarAdapter.CalendarNewMonthDateViewHolder(
+        CalendarNewMonthDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
         ) as CalendarViewHolder<CalendarItem>
 

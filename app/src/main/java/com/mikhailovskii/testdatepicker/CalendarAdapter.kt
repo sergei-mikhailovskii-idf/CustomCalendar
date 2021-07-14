@@ -14,71 +14,6 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
 
     private val onCreateViewHolder = OnCreateViewHolderFacade()
 
-    class CalendarNewMonthDateViewHolder(view: View) : CalendarDateViewHolder(view),
-        OnClickStrategy {
-
-        override lateinit var onClickListener: () -> Unit
-
-        override fun bindData(data: DayItem, selectedDayOfYear: Int) {
-            super.bindData(data, selectedDayOfYear)
-            tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
-            val monthName = when (data.date?.get(Calendar.MONTH)) {
-                0 -> "January"
-                1 -> "February"
-                else -> "March"
-            }
-            tvMonth.text = monthName
-            clRoot.setOnClickListener {
-                onClickListener.invoke()
-            }
-            tvDate.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
-                    else R.color.black
-                )
-            )
-            clRoot.background = ContextCompat.getDrawable(
-                itemView.context,
-                when (selectedDayOfYear) {
-                    data.date?.get(Calendar.DAY_OF_YEAR) -> R.drawable.item_selected_background
-                    else -> R.drawable.item_default_background
-                }
-            )
-        }
-    }
-
-    class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
-        OnClickStrategy {
-
-        override lateinit var onClickListener: () -> Unit
-
-        override fun bindData(data: DayItem, selectedDayOfYear: Int) {
-            super.bindData(data, selectedDayOfYear)
-
-            tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
-
-            clRoot.setOnClickListener {
-                onClickListener.invoke()
-            }
-
-            clRoot.background = ContextCompat.getDrawable(
-                itemView.context,
-                when (selectedDayOfYear) {
-                    data.date?.get(Calendar.DAY_OF_YEAR) -> R.drawable.item_selected_background
-                    else -> R.drawable.item_default_background
-                }
-            )
-            tvDate.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
-                    else R.color.black
-                )
-            )
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -127,9 +62,6 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
                 localItems.add(EmptyDayItem)
             }
             localItems.addAll(items)
-//            for (i in 0 until 7) {
-//                localItems.add(0, HeaderDayNameItem("DO"))
-//            }
             this.items.clear()
             this.items.addAll(localItems)
         }
