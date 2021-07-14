@@ -23,14 +23,16 @@ class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view),
             var tooltip: Tooltip? = Tooltip.Builder(itemView.context)
                 .anchor(clRoot, 0, 0, false)
                 .text("El plazo mínimo de tu EXTENSIÓN debe ser por 4 días")
-                .maxWidth(itemView.context.resources.displayMetrics.widthPixels * 3 / 4)
+                .maxWidth(itemView.context.resources.displayMetrics.widthPixels * 2 / 3)
                 .arrow(true)
                 .closePolicy(ClosePolicy.TOUCH_ANYWHERE_CONSUME)
                 .styleId(R.style.ToolTipAltStyle)
                 .overlay(false)
                 .create()
             clRoot.post {
-                tooltip?.doOnHidden { tooltip = null }?.show(clRoot, Tooltip.Gravity.TOP, true)
+                tooltip
+                    ?.doOnHidden { tooltip = null }
+                    ?.show(clRoot, Tooltip.Gravity.TOP, true)
             }
         }
     }
