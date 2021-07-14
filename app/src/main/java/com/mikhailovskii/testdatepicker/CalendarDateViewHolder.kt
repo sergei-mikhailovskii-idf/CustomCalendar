@@ -13,7 +13,7 @@ abstract class CalendarDateViewHolder(view: View) : CalendarViewHolder<DayItem>(
     protected lateinit var clRoot: ConstraintLayout
 
     @CallSuper
-    override fun bindData(data: DayItem) {
+    override fun bindData(data: DayItem, selectedDayOfYear: Int) {
         tvDate = itemView.findViewById(R.id.tv_day_number)
         tvMonth = itemView.findViewById(R.id.tv_month)
         tvDayDescription = itemView.findViewById(R.id.tv_day_description)

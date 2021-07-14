@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
                 time = today.time
             }, i % 4 != 0))
         }
-        calendarAdapter.setItems(days)
+        val headers = resources.getStringArray(R.array.calendar_column_headers)
+        calendarAdapter.setItems(days, mutableListOf<String>().apply { addAll(headers) })
 
     }
 }

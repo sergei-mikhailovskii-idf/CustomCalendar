@@ -5,8 +5,8 @@ import androidx.core.content.ContextCompat
 import java.util.*
 
 class CalendarTodayDateViewHolder(view: View) : CalendarDateViewHolder(view) {
-    override fun bindData(data: DayItem) {
-        super.bindData(data)
+    override fun bindData(data: DayItem, selectedDayOfYear: Int) {
+        super.bindData(data, selectedDayOfYear)
         tvDayDescription.text = "hoy"
         tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
         clRoot.background = ContextCompat.getDrawable(

@@ -7,7 +7,7 @@ class CalendarHeaderViewHolder(view: View) : CalendarViewHolder<HeaderDayNameIte
 
     private lateinit var tvTitle: AppCompatTextView
 
-    override fun bindData(data: HeaderDayNameItem) {
+    override fun bindData(data: HeaderDayNameItem, selectedDayOfYear: Int) {
         tvTitle = itemView.findViewById(R.id.tv_title)
         tvTitle.text = data.name
     }

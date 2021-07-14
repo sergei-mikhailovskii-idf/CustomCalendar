@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">CustomDatePicker</string>
+    <string-array name="calendar_column_headers">
+        <item>LU</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>JU</item>
+        <item>VI</item>
+        <item>SÁ</item>
+        <item>DO</item>
+    </string-array>
 </resources>

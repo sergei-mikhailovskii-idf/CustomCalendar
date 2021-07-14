@@ -6,5 +6,5 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class CalendarViewHolder<T : CalendarItem>(view: View) :
     RecyclerView.ViewHolder(view) {
 
-    open fun bindData(data: T) {}
+    open fun bindData(data: T, selectedDayOfYear: Int = 0) {}
 }

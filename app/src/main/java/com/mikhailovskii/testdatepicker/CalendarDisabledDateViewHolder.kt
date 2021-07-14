@@ -6,8 +6,8 @@ import java.util.*
 
 class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view) {
 
-    override fun bindData(data: DayItem) {
-        super.bindData(data)
+    override fun bindData(data: DayItem, selectedDayOfYear: Int) {
+        super.bindData(data, selectedDayOfYear)
         tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
         clRoot.background = ContextCompat.getDrawable(
             itemView.context,
