@@ -1,8 +1,6 @@
 package com.mikhailovskii.testdatepicker
 
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
@@ -24,7 +22,8 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
         EmptyDayItem -> CALENDAR_EMPTY_ITEM_TYPE
         is DayItem -> when {
             item.isToday() -> CALENDAR_TODAY_DATE_ITEM_TYPE
-            item.isNewMonth() -> CALENDAR_NEW_MONTH_DATE_ITEM_TYPE
+            item.isNewMonth() && item.isDateEnabled -> CALENDAR_NEW_MONTH_DATE_ITEM_TYPE
+            item.isNewMonth() -> CALENDAR_NEW_MONTH_DISABLED_DATE_ITEM_TYPE
             item.isDateEnabled -> CALENDAR_WITH_DATE_ITEM_TYPE
             else -> CALENDAR_DISABLED_DATE_ITEM_TYPE
         }
@@ -35,11 +34,16 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
     override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
         val item = items[position]
         if (holder is CalendarDateViewHolder) {
-            val localHolder = holder as CalendarDateViewHolder
-            if (localHolder is CalendarDisabledDateViewHolder) {
-                holder.bindData(item, selectedDisabledDayOfYear)
-            } else {
-                holder.bindData(item, selectedDayOfYear)
+            when (holder as CalendarDateViewHolder) {
+                is CalendarDisabledDateViewHolder -> {
+                    holder.bindData(item, selectedDisabledDayOfYear)
+                }
+                is CalendarNewMonthDisabledViewHolder -> {
+                    holder.bindData(item, selectedDisabledDayOfYear)
+                }
+                else -> {
+                    holder.bindData(item, selectedDayOfYear)
+                }
             }
         } else {
             holder.bindData(item, selectedDayOfYear)
@@ -89,6 +93,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
         const val CALENDAR_WITH_DATE_ITEM_TYPE = 3
         const val CALENDAR_DISABLED_DATE_ITEM_TYPE = 4
         const val CALENDAR_HEADER_ITEM_TYPE = 5
+        const val CALENDAR_NEW_MONTH_DISABLED_DATE_ITEM_TYPE = 6
         const val UNKNOWN_ITEM_TYPE = -1
     }
 
