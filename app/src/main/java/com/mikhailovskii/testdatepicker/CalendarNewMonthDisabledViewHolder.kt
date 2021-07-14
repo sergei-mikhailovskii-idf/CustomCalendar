@@ -7,7 +7,7 @@ import it.sephiroth.android.library.xtooltip.Tooltip
 import java.util.*
 
 class CalendarNewMonthDisabledViewHolder(view: View) : CalendarDateViewHolder(view),
-    OnDisabledClickStrategy {
+    DisabledItemStrategy {
 
     override lateinit var onClickListener: () -> Unit
 

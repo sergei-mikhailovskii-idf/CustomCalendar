@@ -2,13 +2,12 @@ package com.mikhailovskii.testdatepicker
 
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import it.sephiroth.android.library.xtooltip.ClosePolicy
 import it.sephiroth.android.library.xtooltip.Tooltip
 import java.util.*
 
 class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view),
-    OnDisabledClickStrategy {
+    DisabledItemStrategy {
 
     override fun bindData(data: DayItem, selectedDayOfYear: Int) {
         super.bindData(data, selectedDayOfYear)

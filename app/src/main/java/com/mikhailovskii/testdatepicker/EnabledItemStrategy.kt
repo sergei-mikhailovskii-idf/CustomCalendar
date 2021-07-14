@@ -1,5 +1,5 @@
 package com.mikhailovskii.testdatepicker
 
-interface OnDisabledClickStrategy {
+interface EnabledItemStrategy {
     var onClickListener: () -> Unit
 }
