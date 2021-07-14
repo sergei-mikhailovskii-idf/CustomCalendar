@@ -2,9 +2,13 @@ package com.mikhailovskii.testdatepicker
 
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import it.sephiroth.android.library.xtooltip.ClosePolicy
+import it.sephiroth.android.library.xtooltip.Tooltip
 import java.util.*
 
-class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view) {
+class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view),
+    OnDisabledClickStrategy {
 
     override fun bindData(data: DayItem, selectedDayOfYear: Int) {
         super.bindData(data, selectedDayOfYear)
@@ -13,6 +17,24 @@ class CalendarDisabledDateViewHolder(view: View) : CalendarDateViewHolder(view) 
             itemView.context,
             R.drawable.item_disabled_background
         )
+        clRoot.setOnClickListener { onClickListener.invoke() }
         tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.silver))
+        if (data.date?.get(Calendar.DAY_OF_YEAR) == selectedDayOfYear) {
+            var tooltip: Tooltip? = Tooltip.Builder(itemView.context)
+                .anchor(clRoot, 0, 0, false)
+                .text("El plazo mínimo de tu EXTENSIÓN debe ser por 4 días")
+                .maxWidth(itemView.context.resources.displayMetrics.widthPixels * 3 / 4)
+                .arrow(true)
+                .closePolicy(ClosePolicy.TOUCH_ANYWHERE_CONSUME)
+                .styleId(R.style.ToolTipAltStyle)
+                .overlay(false)
+                .create()
+            clRoot.post {
+                tooltip?.doOnHidden { tooltip = null }?.show(clRoot, Tooltip.Gravity.TOP, true)
+            }
+        }
     }
+
+    override lateinit var onClickListener: () -> Unit
+
 }

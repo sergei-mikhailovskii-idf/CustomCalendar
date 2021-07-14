@@ -11,6 +11,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
     private val items = mutableListOf<CalendarItem>()
     private var previousClickedPosition = -1
     private var selectedDayOfYear = -1
+    private var selectedDisabledDayOfYear = -1
 
     private val onCreateViewHolder = OnCreateViewHolderFacade()
 
@@ -33,7 +34,16 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
 
     override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
         val item = items[position]
-        holder.bindData(item, selectedDayOfYear)
+        if (holder is CalendarDateViewHolder) {
+            val localHolder = holder as CalendarDateViewHolder
+            if (localHolder is CalendarDisabledDateViewHolder) {
+                holder.bindData(item, selectedDisabledDayOfYear)
+            } else {
+                holder.bindData(item, selectedDayOfYear)
+            }
+        } else {
+            holder.bindData(item, selectedDayOfYear)
+        }
 
         if (item is DayItem) {
             if (holder is OnClickStrategy) {
@@ -44,6 +54,11 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
                         notifyItemChanged(previousClickedPosition)
                     }
                     previousClickedPosition = holder.adapterPosition
+                }
+            } else if (holder is OnDisabledClickStrategy) {
+                holder.onClickListener = {
+                    selectedDisabledDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
+                    notifyItemChanged(position)
                 }
             }
         }

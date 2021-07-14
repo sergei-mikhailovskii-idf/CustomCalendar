@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ToolTipAltStyle" parent="ToolTipLayoutDefaultStyle">
+        <item name="ttlm_padding">16dp</item>
+        <item name="ttlm_backgroundColor">#4C4C4C</item>
+        <item name="ttlm_cornerRadius">4dp</item>
+        <item name="ttlm_arrowRatio">1.2</item>
+        <item name="android:textAppearance">@style/ToolTipAltTextStyle</item>
+    </style>
+    <style name="ToolTipAltTextStyle">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>
