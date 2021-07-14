@@ -7,12 +7,11 @@ import it.sephiroth.android.library.xtooltip.Tooltip
 import java.util.*
 
 class CalendarNewMonthDisabledViewHolder(view: View) : CalendarDateViewHolder(view),
-    ItemStrategy.DisabledItemStrategy {
+    ItemStrategy.DisabledItemStrategy<DayItem> {
 
     override lateinit var onClickListener: () -> Unit
 
     override fun bindData(data: DayItem, selectedDayOfYear: Int) {
-        super.bindData(data, selectedDayOfYear)
         tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
         val monthName = when (data.date?.get(Calendar.MONTH)) {
             0 -> "January"

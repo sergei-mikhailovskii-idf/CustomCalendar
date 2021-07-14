@@ -5,13 +5,11 @@ import androidx.core.content.ContextCompat
 import java.util.*
 
 class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
-    ItemStrategy.EnabledItemStrategy {
+    ItemStrategy.EnabledItemStrategy<DayItem> {
 
     override lateinit var onClickListener: () -> Unit
 
-    override fun bindData(data: DayItem, selectedDayOfYear: Int) {
-        super.bindData(data, selectedDayOfYear)
-
+    override fun bindData(data: DayItem, selectedItemPosition: Int) {
         tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
 
         clRoot.setOnClickListener {
@@ -20,7 +18,7 @@ class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
 
         clRoot.background = ContextCompat.getDrawable(
             itemView.context,
-            when (selectedDayOfYear) {
+            when (selectedItemPosition) {
                 data.date?.get(Calendar.DAY_OF_YEAR) -> R.drawable.item_selected_background
                 else -> R.drawable.item_default_background
             }
@@ -28,7 +26,7 @@ class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
         tvDate.setTextColor(
             ContextCompat.getColor(
                 itemView.context,
-                if (selectedDayOfYear == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
+                if (selectedItemPosition == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
                 else R.color.black
             )
         )

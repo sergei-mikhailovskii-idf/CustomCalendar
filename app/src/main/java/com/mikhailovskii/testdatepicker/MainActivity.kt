@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             // i % 4 != 0 - stub for disabled
             days.add(DayItem(Calendar.getInstance().apply {
                 time = today.time
-            }, i <= 2))
+            }, i > 2))
         }
         val headers = resources.getStringArray(R.array.calendar_column_headers)
         calendarAdapter.setItems(days, mutableListOf<String>().apply { addAll(headers) })

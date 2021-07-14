@@ -2,6 +2,7 @@ package com.mikhailovskii.testdatepicker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 
 class OnCreateViewHolderFacade {
 
@@ -20,36 +21,36 @@ class OnCreateViewHolderFacade {
 
     private fun onCreateCalendarWithDateViewHolder(parent: ViewGroup) = CalendarWithDateViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-    ) as CalendarViewHolder<CalendarItem>
+    ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarEmptyViewHolder(parent: ViewGroup) = CalendarEmptyViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_empty, parent, false)
-    ) as CalendarViewHolder<CalendarItem>
+    ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarTodayDateViewHolder(parent: ViewGroup) =
         CalendarTodayDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+        ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarNewMonthDateViewHolder(parent: ViewGroup) =
         CalendarNewMonthDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+        ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarNewMonthDisabledViewHolder(parent: ViewGroup) =
         CalendarNewMonthDisabledViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+        ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarDisabledDateViewHolder(parent: ViewGroup) =
         CalendarDisabledDateViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+        ) as RecyclerView.ViewHolder
 
     private fun onCreateCalendarHeaderViewHolder(parent: ViewGroup) =
         CalendarHeaderViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_calendar_header, parent, false)
-        ) as CalendarViewHolder<CalendarItem>
+        ) as RecyclerView.ViewHolder
 
 }

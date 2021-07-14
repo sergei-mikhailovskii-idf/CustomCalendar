@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>() {
+class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<CalendarItem>()
     private var previousClickedPosition = -1
@@ -31,26 +31,12 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
         else -> UNKNOWN_ITEM_TYPE
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder<CalendarItem>, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        if (holder is CalendarDateViewHolder) {
-            when (holder as CalendarDateViewHolder) {
-                is CalendarDisabledDateViewHolder -> {
-                    holder.bindData(item, selectedDisabledDayOfYear)
-                }
-                is CalendarNewMonthDisabledViewHolder -> {
-                    holder.bindData(item, selectedDisabledDayOfYear)
-                }
-                else -> {
-                    holder.bindData(item, selectedDayOfYear)
-                }
-            }
-        } else {
-            holder.bindData(item, selectedDayOfYear)
-        }
-
-        if (item is DayItem) {
-            if (holder is ItemStrategy.EnabledItemStrategy) {
+        if (holder is ItemStrategy.EnabledItemStrategy<*>) {
+            val localHolder = holder as ItemStrategy.EnabledItemStrategy<CalendarItem>
+            localHolder.bindData(item, selectedDayOfYear)
+            if (item is DayItem) {
                 holder.onClickListener = {
                     selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                     notifyItemChanged(position)
@@ -59,7 +45,14 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder<CalendarItem>>()
                     }
                     previousClickedPosition = holder.adapterPosition
                 }
-            } else if (holder is ItemStrategy.DisabledItemStrategy) {
+            }
+        } else if (holder is ItemStrategy.NoClickItemStrategy<*>) {
+            val localHolder = holder as ItemStrategy.NoClickItemStrategy<CalendarItem>
+            localHolder.bindData(item)
+        } else if (holder is ItemStrategy.DisabledItemStrategy<*>) {
+            val localHolder = holder as ItemStrategy.DisabledItemStrategy<CalendarItem>
+            localHolder.bindData(item, selectedDisabledDayOfYear)
+            if (item is DayItem) {
                 holder.onClickListener = {
                     selectedDisabledDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                     notifyItemChanged(position)
