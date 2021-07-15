@@ -1,9 +1,10 @@
-package com.mikhailovskii.testdatepicker
+package com.mikhailovskii.testdatepicker.viewholder
 
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhailovskii.testdatepicker.R
 
 abstract class CalendarDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
