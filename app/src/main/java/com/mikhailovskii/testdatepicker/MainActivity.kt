@@ -3,6 +3,7 @@ package com.mikhailovskii.testdatepicker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhailovskii.testdatepicker.utils.CalendarUtils
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,19 +17,14 @@ class MainActivity : AppCompatActivity() {
         val rvDays = findViewById<RecyclerView>(R.id.rv_days)
         rvDays.adapter = calendarAdapter
 
-        val days = mutableListOf<DayItem>()
-        val today = Calendar.getInstance()
-        days.add(DayItem(Calendar.getInstance(), false))
-        for (i in 0..29) {
-            today.add(Calendar.DAY_OF_YEAR, 1)
-
-            // i % 4 != 0 - stub for disabled
-            days.add(DayItem(Calendar.getInstance().apply {
-                time = today.time
-            }, i > 2))
-        }
+        val days = CalendarUtils.generateDaysBetweenTwoDates(
+            Calendar.getInstance(),
+            Calendar.getInstance().apply {
+                add(Calendar.MONTH, 1)
+                add(Calendar.DAY_OF_MONTH, -1)
+            }
+        )
         val headers = resources.getStringArray(R.array.calendar_column_headers)
         calendarAdapter.setItems(days, mutableListOf<String>().apply { addAll(headers) })
-
     }
 }
