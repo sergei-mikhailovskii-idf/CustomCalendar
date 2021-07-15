@@ -9,7 +9,7 @@ object CalendarUtils {
 
     fun generateDaysBetweenTwoDates(begin: Calendar, end: Calendar): MutableList<DayItem> {
         val dayItems = mutableListOf<DayItem>()
-        while (begin.time < end.time) {
+        while (begin.get(Calendar.DAY_OF_YEAR) < end.get(Calendar.DAY_OF_YEAR)) {
             dayItems.add(DayItem(date = Calendar.getInstance().apply {
                 time = begin.time
             }))
