@@ -2,8 +2,7 @@ package com.mikhailovskii.testdatepicker
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mikhailovskii.testdatepicker.base.ItemStrategy
-import com.mikhailovskii.testdatepicker.base.OnCreateViewHolderFacade
+import com.mikhailovskii.testdatepicker.base.*
 import java.util.*
 
 class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -40,12 +39,14 @@ class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             localHolder.bindData(item, selectedDayOfYear)
             if (item is DayItem) {
                 holder.onClickListener = {
-                    selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
-                    notifyItemChanged(position)
-                    if (previousClickedPosition != -1) {
-                        notifyItemChanged(previousClickedPosition)
+                    if (selectedDayOfYear != item.date?.get(Calendar.DAY_OF_YEAR) ?: 0) {
+                        selectedDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
+                        notifyItemChanged(position)
+                        if (previousClickedPosition != -1) {
+                            notifyItemChanged(previousClickedPosition)
+                        }
+                        previousClickedPosition = holder.adapterPosition
                     }
-                    previousClickedPosition = holder.adapterPosition
                 }
             }
         } else if (holder is ItemStrategy.NoClickItemStrategy<*>) {

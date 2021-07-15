@@ -1,7 +1,5 @@
 package com.mikhailovskii.testdatepicker.base
 
-import com.mikhailovskii.testdatepicker.CalendarItem
-
 sealed interface ItemStrategy {
     interface EmptyItemStrategy<T : CalendarItem> : ItemStrategy
 

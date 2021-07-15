@@ -1,4 +1,4 @@
-package com.mikhailovskii.testdatepicker
+package com.mikhailovskii.testdatepicker.base
 
 import java.util.*
 
@@ -6,7 +6,7 @@ sealed class CalendarItem
 
 class DayItem(
     val date: Calendar? = null,
-    val isDateEnabled: Boolean = true
+    var isDateEnabled: Boolean = true
 ): CalendarItem() {
 
     fun isToday() = if (date != null) isSameDay(date, Calendar.getInstance()) else false
