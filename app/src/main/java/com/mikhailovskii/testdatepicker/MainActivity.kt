@@ -8,7 +8,14 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val calendarAdapter = CalendarAdapter()
+    private val calendarAdapter = CalendarAdapter(
+        onEnabledDayClicked = {
+            println("enabled ${it.date?.let(CalendarUtils::formatDate)}")
+        },
+        onDisabledDayClicked = {
+            println("disabled ${it.date?.let(CalendarUtils::formatDate)}")
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

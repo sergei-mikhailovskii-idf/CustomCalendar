@@ -22,4 +22,7 @@ object CalendarUtils {
         }
         return dayItems
     }
+
+    fun formatDate(date: Calendar) =
+        "${date.get(Calendar.DAY_OF_MONTH)}-${date.get(Calendar.MONTH)}-${date.get(Calendar.YEAR)}"
 }

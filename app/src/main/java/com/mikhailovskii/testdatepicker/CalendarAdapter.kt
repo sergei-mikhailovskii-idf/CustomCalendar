@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikhailovskii.testdatepicker.base.*
 import java.util.*
 
-class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CalendarAdapter(
+    val onEnabledDayClicked: ((DayItem) -> Unit)? = null,
+    val onDisabledDayClicked: ((DayItem) -> Unit)? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<CalendarItem>()
     private var previousClickedPosition = -1
@@ -46,6 +49,7 @@ class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             notifyItemChanged(previousClickedPosition)
                         }
                         previousClickedPosition = holder.adapterPosition
+                        onEnabledDayClicked?.invoke(item)
                     }
                 }
             }
@@ -59,6 +63,7 @@ class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.onClickListener = {
                     selectedDisabledDayOfYear = item.date?.get(Calendar.DAY_OF_YEAR) ?: 0
                     notifyItemChanged(position)
+                    onDisabledDayClicked?.invoke(item)
                 }
             }
         }
