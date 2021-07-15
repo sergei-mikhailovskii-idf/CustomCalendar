@@ -17,11 +17,8 @@ class CalendarTodayDateViewHolder(view: View) : CalendarDateViewHolder(view),
             itemView.context,
             R.drawable.item_today_background
         )
-        val monthName = when (data.date?.get(Calendar.MONTH)) {
-            0 -> "January"
-            1 -> "February"
-            else -> "March"
-        }
+        val monthName = itemView.resources
+            .getStringArray(R.array.calendar_month_names)[data.date?.get(Calendar.MONTH) ?: 0]
         tvMonth.text = monthName
         tvDate.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
         tvDayDescription.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
