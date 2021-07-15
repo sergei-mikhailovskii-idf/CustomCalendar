@@ -1,8 +1,10 @@
-package com.mikhailovskii.testdatepicker
+package com.mikhailovskii.testdatepicker.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhailovskii.testdatepicker.CalendarAdapter
+import com.mikhailovskii.testdatepicker.R
 import com.mikhailovskii.testdatepicker.viewholder.*
 
 class OnCreateViewHolderFacade {

@@ -3,7 +3,7 @@ package com.mikhailovskii.testdatepicker.viewholder
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.mikhailovskii.testdatepicker.DayItem
-import com.mikhailovskii.testdatepicker.ItemStrategy
+import com.mikhailovskii.testdatepicker.base.ItemStrategy
 import com.mikhailovskii.testdatepicker.R
 import java.util.*
 

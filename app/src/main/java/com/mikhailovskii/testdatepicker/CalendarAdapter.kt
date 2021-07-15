@@ -2,6 +2,8 @@ package com.mikhailovskii.testdatepicker
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhailovskii.testdatepicker.base.ItemStrategy
+import com.mikhailovskii.testdatepicker.base.OnCreateViewHolderFacade
 import java.util.*
 
 class CalendarAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

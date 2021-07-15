@@ -4,7 +4,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mikhailovskii.testdatepicker.HeaderDayNameItem
-import com.mikhailovskii.testdatepicker.ItemStrategy
+import com.mikhailovskii.testdatepicker.base.ItemStrategy
 import com.mikhailovskii.testdatepicker.R
 
 class CalendarHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view),
