@@ -2,6 +2,7 @@ package com.mikhailovskii.testdatepicker.utils
 
 import com.mikhailovskii.testdatepicker.base.DayItem
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object CalendarUtils {
 
@@ -21,6 +22,14 @@ object CalendarUtils {
             }
         }
         return dayItems
+    }
+
+    fun calculateDiff(from: Calendar?, to: Calendar?) : Long? {
+        if (from == null || to == null) return null
+        val startTime = from.time.time
+        val endTime = to.time.time
+        val diff = endTime - startTime
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
     }
 
     fun formatDate(date: Calendar) =

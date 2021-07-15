@@ -3,17 +3,23 @@ package com.mikhailovskii.testdatepicker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.mikhailovskii.testdatepicker.base.CalendarItem
+import com.mikhailovskii.testdatepicker.base.DayItem
 import com.mikhailovskii.testdatepicker.utils.CalendarUtils
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var days: MutableList<DayItem>
+
     private val calendarAdapter = CalendarAdapter(
         onEnabledDayClicked = {
-            println("enabled ${it.date?.let(CalendarUtils::formatDate)}")
+            println("enabled: ${it.date?.let(CalendarUtils::formatDate)}")
+            println("diff: ${CalendarUtils.calculateDiff(days[0].date, it.date)}")
         },
         onDisabledDayClicked = {
-            println("disabled ${it.date?.let(CalendarUtils::formatDate)}")
+            println("disabled: ${it.date?.let(CalendarUtils::formatDate)}")
+            println("diff: ${CalendarUtils.calculateDiff(days[0].date, it.date)}")
         }
     )
 
@@ -24,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val rvDays = findViewById<RecyclerView>(R.id.rv_days)
         rvDays.adapter = calendarAdapter
 
-        val days = CalendarUtils.generateDaysBetweenTwoDates(
+        days = CalendarUtils.generateDaysBetweenTwoDates(
             Calendar.getInstance(),
             Calendar.getInstance().apply {
                 add(Calendar.MONTH, 1)
