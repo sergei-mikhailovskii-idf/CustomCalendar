@@ -12,10 +12,12 @@ class OnCreateViewHolderFacade {
     ) = when (viewType) {
         CalendarAdapter.CALENDAR_EMPTY_ITEM_TYPE -> onCreateCalendarEmptyViewHolder(parent)
         CalendarAdapter.CALENDAR_TODAY_DATE_ITEM_TYPE -> onCreateCalendarTodayDateViewHolder(parent)
-        CalendarAdapter.CALENDAR_NEW_MONTH_DATE_ITEM_TYPE -> onCreateCalendarNewMonthDateViewHolder(parent)
+        CalendarAdapter.CALENDAR_NEW_MONTH_DATE_ITEM_TYPE ->
+            onCreateCalendarNewMonthDateViewHolder(parent)
         CalendarAdapter.CALENDAR_WITH_DATE_ITEM_TYPE -> onCreateCalendarWithDateViewHolder(parent)
         CalendarAdapter.CALENDAR_HEADER_ITEM_TYPE -> onCreateCalendarHeaderViewHolder(parent)
-        CalendarAdapter.CALENDAR_NEW_MONTH_DISABLED_DATE_ITEM_TYPE -> onCreateCalendarNewMonthDisabledViewHolder(parent)
+        CalendarAdapter.CALENDAR_NEW_MONTH_DISABLED_DATE_ITEM_TYPE ->
+            onCreateCalendarNewMonthDisabledViewHolder(parent)
         else -> onCreateCalendarDisabledDateViewHolder(parent)
     }
 

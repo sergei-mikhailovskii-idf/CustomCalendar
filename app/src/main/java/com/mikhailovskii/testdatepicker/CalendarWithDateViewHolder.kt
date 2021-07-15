@@ -9,7 +9,7 @@ class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
 
     override lateinit var onClickListener: () -> Unit
 
-    override fun bindData(data: DayItem, selectedItemPosition: Int) {
+    override fun bindData(data: DayItem, selectedDay: Int) {
         tvDate.text = data.date?.get(Calendar.DAY_OF_MONTH)?.toString()
 
         clRoot.setOnClickListener {
@@ -18,7 +18,7 @@ class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
 
         clRoot.background = ContextCompat.getDrawable(
             itemView.context,
-            when (selectedItemPosition) {
+            when (selectedDay) {
                 data.date?.get(Calendar.DAY_OF_YEAR) -> R.drawable.item_selected_background
                 else -> R.drawable.item_default_background
             }
@@ -26,7 +26,7 @@ class CalendarWithDateViewHolder(view: View) : CalendarDateViewHolder(view),
         tvDate.setTextColor(
             ContextCompat.getColor(
                 itemView.context,
-                if (selectedItemPosition == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
+                if (selectedDay == data.date?.get(Calendar.DAY_OF_YEAR)) R.color.white
                 else R.color.black
             )
         )

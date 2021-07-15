@@ -10,12 +10,12 @@ sealed interface ItemStrategy {
     interface DisabledItemStrategy<T : CalendarItem> : ItemStrategy {
         var onClickListener: () -> Unit
 
-        fun bindData(data: T, selectedItemPosition: Int)
+        fun bindData(data: T, selectedDay: Int)
     }
 
     interface EnabledItemStrategy<T : CalendarItem> : ItemStrategy {
         var onClickListener: () -> Unit
 
-        fun bindData(data: T, selectedItemPosition: Int)
+        fun bindData(data: T, selectedDay: Int)
     }
 }
